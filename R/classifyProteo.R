@@ -15,20 +15,27 @@ classifyProteo <- function(data_dt, lfcCol_v, pvalCol_v, lfc_v = 0.5, pval_v = c
   #' @return data_dt with one new column
   #' @export
   
+  library(data.table)
   ### Add a column indicating up/dn direction
   data_dt$diffExp <- "NO"
+  print(class(data_dt))
+  data_dt <- as.data.table(data_dt)
   
   ### Low
-  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, diffExp := "upLow"]
-  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, diffExp := "downLow"]
+  print("one")
+  #print(data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), ])
+  data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), diffExp := "upLow"]
+  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), diffExp := "downLow"]
   
   ### Med
-  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], diffExp := "upMed"]
-  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], diffExp := "downMed"]
+  print("two")
+  data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), diffExp := "upMed"]
+  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), diffExp := "downMed"]
   
   ### High
-  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) < pval_v[1], diffExp := "upHigh"]
-  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) < pval_v[1], diffExp := "downHigh"]
+  print("three")
+  data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) < pval_v[1]), diffExp := "upHigh"]
+  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) < pval_v[1]), diffExp := "downHigh"]
   
   ### Factorize
   data_dt$diffExp <- factor(data_dt$diffExp,

@@ -24,9 +24,10 @@ summarizeProteo <- function(data_lsdt, geneCol_v = "Gene", col_v = "diffExp",
     currData_dt <- data_lsdt[[currName_v]]
     
     ### Get gene groups
-    geneGroups_lslsv <- sapply(levels_lsv, function(x) {
-      sapply(x, function(y) setdiff(currData_dt[get(col_v) == y, get(geneCol_v)], "na"), simplify = F, USE.NAMES = T)
-    }, simplify = F, USE.NAMES = T)
+    # geneGroups_lslsv <- sapply(levels_lsv, function(x) {
+    #   sapply(x, function(y) setdiff(currData_dt[get(col_v) == y, get(geneCol_v)], "na"), simplify = F, USE.NAMES = T)
+    # }, simplify = F, USE.NAMES = T)
+    geneGroups_lslsv <- getGeneGroups(currData_dt, levels_lsv = levels_lsv, removeNA_v = T)
     
     ### Summarize up/dn genes
     summary_dt <- parseProteoList(geneGroups_lslsv)

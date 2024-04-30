@@ -6,8 +6,8 @@
 \usage{
 classifyProteo(
   data_dt,
-  lfcCol_v,
-  pvalCol_v,
+  lfcCol_v = "logFC",
+  pvalCol_v = "FDR",
   lfc_v = 0.5,
   pval_v = c(0.01, 0.05),
   newName_v = "diffExp"

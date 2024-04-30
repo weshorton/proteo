@@ -23,6 +23,8 @@ classifyProteo(
 \item{lfc_v}{value for cut-off for fold change. Will be included in plot as vertical dotted line}
 
 \item{pval_v}{vector of length 2! first value indicates the threshold for 'high' significance, second for 'low'}
+
+\item{newName_v}{name of new column}
 }
 \value{
 data_dt with one new column

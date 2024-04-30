@@ -11,6 +11,7 @@ classifyProteo <- function(data_dt, lfcCol_v = "logFC", pvalCol_v = "FDR", lfc_v
   #' @param lfc_v value for cut-off for fold change. Will be included in plot as vertical dotted line
   #' @param pval_v vector of length 2! first value indicates the threshold for 'high' significance, second for 'low'
   #' @param newName_v name of new column
+  #' @import data.table
   #' @details
   #' Add a new column in data_dt summarizing the direction and level of each entry.
   #' @return data_dt with one new column

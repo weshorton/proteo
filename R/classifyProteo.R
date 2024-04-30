@@ -21,31 +21,44 @@ classifyProteo <- function(data_dt, lfcCol_v, pvalCol_v, lfc_v = 0.5, pval_v = c
   setDT(data_dt)
   
   ### Low
-  print("one")
-  #print(data_dt[((lfcCol_v) > lfc_v & (pvalCol_v) >= pval_v[2] & (pvalCol_v) < 0.1), ])
-  #data_dt[, (newName_v) := ifelse((.SD[[1]] > lfc_v & .SD[[2]] >= pval_v[2] & .SD[[2]] < 0.1), "upLow", get(newName_v))]
-  #data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), (newName_v) := "upLow"]
-  print(class(data_dt))
-  print(head(data_dt))
-  print(data_dt[get(lfcCol_v) > lfc_v,])
-  data_dt[get(lfcCol_v) > lfc_v, newName_v := "upLow"]
-  print("oneb")
-  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), (newName_v) := "downLow"]
+  # print("one")
+  # #print(data_dt[((lfcCol_v) > lfc_v & (pvalCol_v) >= pval_v[2] & (pvalCol_v) < 0.1), ])
+  # #data_dt[, (newName_v) := ifelse((.SD[[1]] > lfc_v & .SD[[2]] >= pval_v[2] & .SD[[2]] < 0.1), "upLow", get(newName_v))]
+  # #data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), (newName_v) := "upLow"]
+  # print(class(data_dt))
+  # print(head(data_dt))
+  # print(data_dt[get(lfcCol_v) > lfc_v,])
+  # data_dt[get(lfcCol_v) > lfc_v, newName_v := "upLow"]
+  # print("oneb")
+  # data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1), (newName_v) := "downLow"]
+  # 
+  # ### Med
+  # print("two")
+  # data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), (newName_v) := "upMed"]
+  # print("twob")
+  # data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), (newName_v) := "downMed"]
+  # 
+  # ### High
+  # print("three")
+  # data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) < pval_v[1]), (newName_v) := "upHigh"]
+  # print("threeb")
+  # data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) < pval_v[1]), (newName_v) := "downHigh"]
   
-  ### Med
-  print("two")
-  data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), (newName_v) := "upMed"]
-  print("twob")
-  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2]), (newName_v) := "downMed"]
+  print(truelength(data_dt))
+  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, (newName_v) := "upLow"]
+  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, (newName_v) := "downLow"]
   
-  ### High
-  print("three")
-  data_dt[(get(lfcCol_v) > lfc_v & get(pvalCol_v) < pval_v[1]), (newName_v) := "upHigh"]
-  print("threeb")
-  data_dt[(get(lfcCol_v) < -lfc_v & get(pvalCol_v) < pval_v[1]), (newName_v) := "downHigh"]
+  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "upMed"]
+  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "downMed"]
+  
+  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "upHigh"]
+  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "downHigh"]
+  
+  data_dt[is.na(get(newName_v)), (newName_v) := "NO"]
+  return(data_dt)
   
   ### Factorize
-  data_dt$diffExp <- factor(data_dt$diffExp,
+  data_dt[[newName_v]] <- factor(data_dt[[newName_v]],
                             levels = c("NO", 
                                        "downLow", "downMed", "downHigh", 
                                        "upHigh", "upMed", "upLow"))

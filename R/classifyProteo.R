@@ -18,7 +18,7 @@ classifyProteo <- function(data_dt, lfcCol_v, pvalCol_v, lfc_v = 0.5, pval_v = c
   
   ### Add a column indicating up/dn direction
   #data_dt[[newName_v]] <- "NO"
-  setDT(data_dt)
+  #setDT(data_dt)
   
   ### Low
   # print("one")

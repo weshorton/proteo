@@ -17,17 +17,17 @@ classifyProteo <- function(data_dt, lfcCol_v = "logFC", pvalCol_v = "FDR", lfc_v
   #' @return data_dt with one new column
   #' @export
   
-  ### Low
+  ### Low - between 0.05 and 0.1
   data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, (newName_v) := "upLow"]
   data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[2] & get(pvalCol_v) < 0.1, (newName_v) := "downLow"]
   
-  ### Med
+  ### Med - between pval_v[1] and pval_v[2]
   data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "upMed"]
   data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "downMed"]
   
-  ### High
-  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "upHigh"]
-  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) >= pval_v[1] & get(pvalCol_v) < pval_v[2], (newName_v) := "downHigh"]
+  ### High - less than 
+  data_dt[get(lfcCol_v) > lfc_v & get(pvalCol_v) < pval_v[1], (newName_v) := "upHigh"]
+  data_dt[get(lfcCol_v) < -lfc_v & get(pvalCol_v) < pval_v[1], (newName_v) := "downHigh"]
   
   ### Others
   data_dt[is.na(get(newName_v)), (newName_v) := "NO"]
@@ -41,4 +41,4 @@ classifyProteo <- function(data_dt, lfcCol_v = "logFC", pvalCol_v = "FDR", lfc_v
   ### Return
   return(data_dt)
   
-}
+} # classifyProteo

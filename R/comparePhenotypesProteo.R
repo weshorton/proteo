@@ -1,4 +1,5 @@
-compareDataTypesProteo <- function(tmt_lsdt, silac_lsdt, geneCol_v = "Gene", col_v = "diffExp",
+### This has not been changed from the datatypes version yet
+comparePhenotypesProteo <- function(tmt_lsdt, silac_lsdt, geneCol_v = "Gene", col_v = "diffExp",
                           levels_lsv = list("No" = "NO",
                                             "Up" = c("upHigh", "upMed", "upLow"),
                                             "Down" = c("downHigh", "downMed", "downLow")),

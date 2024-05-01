@@ -36,7 +36,9 @@ compareProteo <- function(tmt_lsdt, silac_lsdt, geneCol_v = "Gene", col_v = "dif
   groupNames_dt$Dir <- sapply(groupNames_dt$value, function(x) strsplit(x, split = "_")[[1]][3])
   groupNames_dt$Level <- sapply(groupNames_dt$value, function(x) strsplit(x, split = "_")[[1]][4])
   groupNames_dt$value <- NULL
-  groupNames_dt$tmtGenes <- groupNames_dt$silacGenes <- groupNames_dt$sharedGenes <- numeric()
+  groupNames_dt$tmtGenes <- numeric()
+  groupNames_dt$silacGenes <- numeric()
+  groupNames_dt$sharedGenes <- numeric()
   
   for (i in 1:groupNames_dt[,.N]) {
     
@@ -60,8 +62,18 @@ compareProteo <- function(tmt_lsdt, silac_lsdt, geneCol_v = "Gene", col_v = "dif
     
   } # for i
   
+  ### Add percents
+  groupNames_dt[, pctTmtShared := round(sharedGenes / (sharedGenes + tmtGenes) * 100, digits = 3)]
+  groupNames_dt[, pctSilacShared := round(sharedGenes / (sharedGenes + silacGenes) * 100, digits = 3)]
+  groupNames_dt[, pctTmtUnique := round(tmtGenes / (sharedGenes + tmtGenes) * 100, digits = 3)]
+  groupNames_dt[, pctSilacUnique := round(silacGenes / (sharedGenes + silacGenes) * 100, digits = 3)]
+  
+  ### split to list
+  compareSummary_lsdt <- sapply(names(summary_lsdt), function(x) {
+    return(groupNames_dt[Phenotype == x,])}, simplify = F, USE.NAMES = T)
+  
   out_lsdt <- list("indSummary" = summary_lsdt,
-                   "compareSummary" = groupNames_dt,
+                   "compareSummary" = compareSummary_lsdt,
                    "geneGroups" = list("tmt" = tmtGroups_lslslsv,
                                        "silac" = silacGroups_lslslsv))
   

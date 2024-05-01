@@ -39,13 +39,13 @@ parseProteoList <- function(list_lslsv) {
                                       "Pct of Sig Dn Genes High Conf.",
                                       "Pct of Sig Dn Genes Med Conf.",
                                       "Pct of Sig Dn Genes Low Conf."),
-                       "Amount" = c(pctOfTotal_allSig_v,
-                                    pctOfTotal_upSig_v,
-                                    pctOfTotal_dnSig_v,
-                                    pctOfSig_up_v,
-                                    pctOfSigUp_lvl_v,
-                                    pctOfSig_dn_v,
-                                    pctOfSigDn_lvl_v))
+                       "Pct" = c(round(pctOfTotal_allSig_v, digits = 3),
+                                    round(pctOfTotal_upSig_v, digits = 3), 
+                                    round(pctOfTotal_dnSig_v, digits = 3),
+                                    round(pctOfSig_up_v, digits = 3),
+                                    round(pctOfSigUp_lvl_v, digits = 3),
+                                    round(pctOfSig_dn_v, digits = 3),
+                                    round(pctOfSigDn_lvl_v, digits = 3)))
   
   return(out_dt)
   

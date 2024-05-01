@@ -44,18 +44,18 @@ compareDataTypesProteo <- function(tmt_dt, silac_dt, name_v,
                               "silac" = silac_dt[diffExp == "downHigh", Gene])
   
   ### All gene venn diagram
-  currUpAll_venn <- venn.diagram(x = currUpGenesAll_lsv, filename = NULL, print.mode = c("raw", "percent"),
-                                 main = paste0("Shared Up-reg genes All\n", name_v))
+  currUpAll_venn <- invisible(venn.diagram(x = currUpGenesAll_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                 main = paste0("Shared Up-reg genes All\n", name_v)))
   
-  currDnAll_venn <- venn.diagram(x = currDnGenesAll_lsv, filename = NULL, print.mode = c("raw", "percent"),
-                                 main = paste0("Shared Down-reg genes All\n", name_v))
+  currDnAll_venn <- invisible(venn.diagram(x = currDnGenesAll_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                 main = paste0("Shared Down-reg genes All\n", name_v)))
   
   ### High-Confidence gene venn diagram
-  currUpHigh_venn <- venn.diagram(x = currUpGenesHigh_lsv, filename = NULL, print.mode = c("raw", "percent"),
-                                  main = paste0("Shared Up-reg genes High-Conf\n", name_v))
+  currUpHigh_venn <- invisible(venn.diagram(x = currUpGenesHigh_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                  main = paste0("Shared Up-reg genes High-Conf\n", name_v)))
   
-  currDnHigh_venn <- venn.diagram(x = currDnGenesHigh_lsv, filename = NULL, print.mode = c("raw", "percent"),
-                                  main = paste0("Shared Down-reg genes High-Conf\n", name_v))
+  currDnHigh_venn <- invisible(venn.diagram(x = currDnGenesHigh_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                  main = paste0("Shared Down-reg genes High-Conf\n", name_v)))
   
   ### Arrange
   currVenn <- gridExtra::grid.arrange(currUpAll_venn, currDnAll_venn, currUpHigh_venn, currDnHigh_venn,

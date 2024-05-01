@@ -5,19 +5,18 @@
 \title{Marker Bar Plot}
 \usage{
 markerBarPlot(
-  data_dt,
+  data_lsdt,
   geneCol_v = "Gene",
   y_v = "logFC",
   fillCol_v = "Class",
   colors_v = NULL,
   markers_dt,
   markerName_v,
-  expName_v
+  expName_v = NULL,
+  title_v = NULL
 )
 }
 \arguments{
-\item{data_dt}{data.table of proteomics DE results}
-
 \item{geneCol_v}{column in data_dt containing gene names}
 
 \item{y_v}{column in data_dt that has the y variable}
@@ -28,7 +27,11 @@ markerBarPlot(
 
 \item{markerName_v}{name of markers to include in plot}
 
-\item{expName_v}{name of phenotype to include in plot}
+\item{expName_v}{name of phenotype to include in plot. Only used if data_lsdt is a single data.table, then it is required.}
+
+\item{title_v}{optional character vector to prepend to the title.}
+
+\item{data_dt}{list of data.tables of proteomics DE results (can also just be one table)}
 }
 \value{
 ggplot

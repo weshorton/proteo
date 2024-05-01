@@ -3,6 +3,7 @@
 export(classifyProteo)
 export(compareProteo)
 export(getGeneGroups)
+export(markerBarPlot)
 export(parseProteoList)
 export(proteoVolcano)
 export(summarizeProteo)

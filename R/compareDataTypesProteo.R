@@ -1,16 +1,16 @@
 compareDataTypesProteo <- function(tmt_lsdt, silac_lsdt, geneCol_v = "Gene", col_v = "diffExp",
                           levels_lsv = list("No" = "NO",
                                             "Up" = c("upHigh", "upMed", "upLow"),
-                                            "Down" = c("downHigh", "downMed", "downLow")),
-                          markers_lsdt) {
+                                            "Down" = c("downHigh", "downMed", "downLow"))) {
   #' Compare Proteo
   #' @description
     #' Compare the significance groups of proteomics results 
     #' between tmt and silac
   #' @param tmt_lsdt list of tmt results. Must be run through classifyProteo first.
   #' @param silac_lsdt list of silac results. Must be run through classifyProteo first.
+  #' @param geneCol_v column name in both data.tables that refers to the genes
+  #' @param col_v column name in both data.tables that refers to differential expression "levels", from classifyProteo
   #' @param levels_lsv levels created from classifyProteo. This shouldn't change, but could theoretically.
-  #' @param markers_lsdt list of data.tables containing markers to use. Must have at least a 'Gene' column
   #' @details
     #' Want to get an idea of what to expect in each experiment. How many genes significant/shared/etc.
   #' @return list

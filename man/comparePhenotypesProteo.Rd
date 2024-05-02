@@ -5,30 +5,34 @@
 \title{Compare Proteo}
 \usage{
 comparePhenotypesProteo(
-  tmt_lsdt,
-  silac_lsdt,
+  data1_dt,
+  data2_dt = NULL,
+  names_v = NULL,
   geneCol_v = "Gene",
   col_v = "diffExp",
   levels_lsv = list(No = "NO", Up = c("upHigh", "upMed", "upLow"), Down = c("downHigh",
-    "downMed", "downLow")),
-  markers_lsdt
+    "downMed", "downLow"))
 )
 }
 \arguments{
-\item{tmt_lsdt}{list of tmt results. Must be run through classifyProteo first.}
+\item{data1_dt}{either a list of two data.tables, or a single data.table}
 
-\item{silac_lsdt}{list of silac results. Must be run through classifyProteo first.}
+\item{data2_dt}{if data1_dt is a list, this will be ignored. If it's a data.table, this must be a data.table}
+
+\item{names_v}{optional vector containing the experiment names for data1 and data2. Only used if data1_dt is NOT a list.}
+
+\item{geneCol_v}{column name in both data.tables that refers to the genes}
+
+\item{col_v}{column name in both data.tables that refers to differential expression "levels", from classifyProteo}
 
 \item{levels_lsv}{levels created from classifyProteo. This shouldn't change, but could theoretically.}
-
-\item{markers_lsdt}{list of data.tables containing markers to use. Must have at least a 'Gene' column}
 }
 \value{
 list
 }
 \description{
 Compare the significance groups of proteomics results
-between tmt and silac
+between two different experiments from the same data type
 }
 \details{
 Want to get an idea of what to expect in each experiment. How many genes significant/shared/etc.

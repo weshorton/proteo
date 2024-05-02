@@ -10,8 +10,7 @@ compareDataTypesProteo(
   geneCol_v = "Gene",
   col_v = "diffExp",
   levels_lsv = list(No = "NO", Up = c("upHigh", "upMed", "upLow"), Down = c("downHigh",
-    "downMed", "downLow")),
-  markers_lsdt
+    "downMed", "downLow"))
 )
 }
 \arguments{
@@ -19,9 +18,11 @@ compareDataTypesProteo(
 
 \item{silac_lsdt}{list of silac results. Must be run through classifyProteo first.}
 
-\item{levels_lsv}{levels created from classifyProteo. This shouldn't change, but could theoretically.}
+\item{geneCol_v}{column name in both data.tables that refers to the genes}
 
-\item{markers_lsdt}{list of data.tables containing markers to use. Must have at least a 'Gene' column}
+\item{col_v}{column name in both data.tables that refers to differential expression "levels", from classifyProteo}
+
+\item{levels_lsv}{levels created from classifyProteo. This shouldn't change, but could theoretically.}
 }
 \value{
 list

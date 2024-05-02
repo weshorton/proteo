@@ -17,6 +17,10 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
   #' @return volcano plot, venn diagrams, scatterplot
   #' @export
   
+  ###
+  ### DATA WRANGLE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ###
+  
   ### Wrangle different input data types
   if (!is.logical(all.equal(class(data1_dt), "list"))) {
     data_lsdt <- list(data1_dt, data2_dt)
@@ -38,6 +42,10 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
   ### Remove NA genes
   data_lsdt <- sapply(data_lsdt, function(x) x[Gene != "na",], simplify = F, USE.NAMES = T)
   
+  ###
+  ### VOLCANO PLOT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ###
+  
   ### Make volcano plot
   volcano1_gg <- proteoVolcano(data_dt = data_lsdt[[1]], lfcCol_v = lfcCol1_v, pvalCol_v = pValCol1_v,
                                  lfc_v = 1, ident1_v = names(data_lsdt)[1],
@@ -51,6 +59,10 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
   
   currVolcano_gg <- ggpubr::ggarrange(plotlist = list(volcano1_gg, volcano2_gg), ncol = 2)
   print(currVolcano_gg)
+  
+  ###
+  ### VENN DIAGRAM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ###
   
   ### Get up and down genes - all
   currUpGenesAll_lsv <- list("one" = data_lsdt[[1]][diffExp %in% c("upHigh", "upMed", "upLow"),Gene], 
@@ -84,6 +96,10 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
   currVenn <- gridExtra::grid.arrange(currUpAll_venn, currDnAll_venn, currUpHigh_venn, currDnHigh_venn,
                                       nrow = 2)
   
+  ###
+  ### SCATTER PLOT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ###
+  
   ### Compare LFC of shared genes
   sharedGenes_v <- c(intersect(currUpGenesAll_lsv[[1]], currUpGenesAll_lsv[[2]]),
                      intersect(currDnGenesAll_lsv[[1]], currDnGenesAll_lsv[[2]]))
@@ -114,6 +130,11 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
     ggpubr::stat_cor(data = sig_dt, show.legend = F) +
     ggtitle(paste0("Compare ", names(data_lsdt)[1], " (x) and ", 
                    names(data_lsdt)[2],"  (y) fold changes\n", " R value excludes 'NO'"))
+  
+  ###
+  ### GSEA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ###
+  
     
 } # compareDataTypesProteo
 

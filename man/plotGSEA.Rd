@@ -6,7 +6,7 @@
 \usage{
 plotGSEA(
   data_dt,
-  list_v,
+  list_lsv,
   listName_v,
   title_v = NULL,
   name_v,
@@ -21,7 +21,7 @@ plotGSEA(
 \arguments{
 \item{data_dt}{DEG table to run GSEA on}
 
-\item{list_v}{list of genes (gene set) used for GSEA}
+\item{list_lsv}{list of genes (gene set) used for GSEA}
 
 \item{listName_v}{name of the gene set}
 

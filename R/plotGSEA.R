@@ -1,11 +1,11 @@
-plotGSEA <- function(data_dt, list_v, listName_v, title_v = NULL, name_v, 
+plotGSEA <- function(data_dt, list_lsv, listName_v, title_v = NULL, name_v, 
                      lfcCol_v = "logFC", le_v = F, shortenNames_v = T, 
                      lfc_v = 0.5, pval_v = 0.05, labelSize_v = 1) {
   #' Run GSEA
   #' @description
     #' Run GSEA and output results. Optionally output plots
   #' @param data_dt DEG table to run GSEA on
-  #' @param list_v list of genes (gene set) used for GSEA
+  #' @param list_lsv list of genes (gene set) used for GSEA
   #' @param listName_v name of the gene set
   #' @param title_v optional plot title
   #' @param name_v name of experiment (e.g. M1E)
@@ -23,7 +23,7 @@ plotGSEA <- function(data_dt, list_v, listName_v, title_v = NULL, name_v,
   data_dt <- data_dt[order(-get(lfcCol_v))]
   
   ### Run GSEA calculations
-  gsea_res <- wrh.scRNA::runFGSEA(data_df = data_dt, rankCol_v = lfcCol_v, pathways_v = list_v, minSize_v = 15, maxSize_v = 500, seed_v = 42)
+  gsea_res <- wrh.scRNA::runFGSEA(data_df = data_dt, rankCol_v = lfcCol_v, pathways_v = list_lsv, minSize_v = 15, maxSize_v = 500, seed_v = 42)
   
   ### Skip if empty
   if (nrow(gsea_res) == 0) {
@@ -73,7 +73,7 @@ plotGSEA <- function(data_dt, list_v, listName_v, title_v = NULL, name_v,
       ### Make plot
       plot_gg <- ggplot2::ggplot(data = gsea_res, aes(x = reorder(pathway, NES), y = NES, fill = Dir)) +
         geom_col() + coord_flip() + my_theme() +
-        scale_fill_manual(values = gseaColors_v, labels = names(gseaColors_v)) +
+        scale_fill_manual(values = wrh.scRNA::gseaColors_v, labels = names(wrh.scRNA::gseaColors_v)) +
         labs(x = "Pathway", y = "NES")
       
       ### Add title

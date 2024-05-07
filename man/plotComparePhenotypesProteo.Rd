@@ -13,7 +13,10 @@ plotComparePhenotypesProteo(
   lfcCol2_v = "logFC",
   pValCol2_v = "FDR",
   lfc_v = 0.5,
-  pval_v = c(0.01, 0.05)
+  pval_v = c(0.01, 0.05),
+  geneLists_lslsv,
+  print_v = F,
+  outDir_v = NULL
 )
 }
 \arguments{
@@ -34,9 +37,15 @@ plotComparePhenotypesProteo(
 \item{lfc_v}{log-fold change cut-off value}
 
 \item{pval_v}{p-value cut-offs for grouping.}
+
+\item{geneLists_lslsv}{list of lists (HALLMARK, GO), for GSEA analysis}
+
+\item{print_v}{logical indicating whether or not to print output to console.}
+
+\item{outDir_v}{optional directory to write output to.}
 }
 \value{
-volcano plot, venn diagrams, scatterplot
+volcano plot, venn diagrams, scatterplot, pathway
 }
 \description{
 Make various plots to compare the genes returned by two phenotypes

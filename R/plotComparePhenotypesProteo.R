@@ -63,7 +63,10 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
                                    labelAll_v = F, labelTop_v = 25, labelDir_v = "both",
                                    labelSize_v = 3, title_v = paste0("Genes expressed in ", names(data_lsdt)[2]))
   
+  ### Combine
   currVolcano_gg <- ggpubr::ggarrange(plotlist = list(volcano1_gg, volcano2_gg), ncol = 2)
+  
+  ### Output
   out_ls[["volcano"]] <- currVolcano_gg
   if (print_v) print(currVolcano_gg)
   
@@ -107,9 +110,9 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
                                   main = paste0("Shared Down-reg genes High-Conf\n", paste(names(data_lsdt), collapse = " vs. "))))
   
   ### Arrange
-  # currVenn <- gridExtra::grid.arrange(currUpAll_venn, currDnAll_venn, currUpHigh_venn, currDnHigh_venn,
-  #                                     nrow = 2)
-  venn_gg <- ggpubr::ggarrange(plotlist = list(currUpAll_venn, currDnAll_venn, currUpHigh_venn, currDnHigh_venn))
+  venn_gg <- ggpubr::ggarrange(plotlist = list(currUpAll_venn, currDnAll_venn, currUpHigh_venn, currDnHigh_venn), nrow = 2)
+  
+  ### Output
   out_ls[["venn"]] <- venn_gg
   if (print_v) print(venn_gg)
   
@@ -119,7 +122,6 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
     print(venn_gg)
     dev.off()
   } # fi !is.null(outDir_v)
-  
   
   ###
   ### SCATTER PLOT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,7 +151,7 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
   xCol_v <- paste0(lfcCol1_v, "_", names(data_lsdt)[1])
   yCol_v <- paste0(lfcCol2_v, "_", names(data_lsdt)[2])
   scatter_gg <- ggplot(comp_dt, aes(x = !!sym(xCol_v), y = !!sym(yCol_v), color = !!sym(tmpCol_v))) +
-    geom_point() + my_theme() +
+    geom_point() + my_theme() + coord_equal() +
     scale_color_manual(values = colors_v, breaks = names(colors_v)) +
     geom_smooth(data = sig_dt, method = 'lm', formula = y~x) +
     ggpubr::stat_cor(data = sig_dt, show.legend = F) +
@@ -180,6 +182,7 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
     currListName_v <- names(geneLists_lslsv)[i]
     currList_lsv <- geneLists_lslsv[[i]]
     
+    ### Waterfall plot
     gsea_lsls <- sapply(names(data_lsdt), function(x) {
       plotGSEA(data_dt = data_lsdt[[x]], list_lsv = currList_lsv, listName_v = currListName_v,
                title_v = paste0("Pathway Enrichment for ", x), name_v = x,
@@ -188,20 +191,45 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
     }, simplify = F, USE.NAMES = T)
     
     plot_gg <- ggpubr::ggarrange(plotlist = list(gsea_lsls[[1]]$plot, gsea_lsls[[2]]$plot), ncol = 2)
+    
+    ### Scatter
     data_dt <- merge(gsea_lsls[[1]]$data[,mget(getCols_v)], gsea_lsls[[2]]$data[,mget(getCols_v)],
                      by = "pathway", sort = F, all = T, suffixes = paste0("_", names(gsea_lsls)))
     data_dt <- data_dt[,mget(c("pathway", grep("NES", colnames(data_dt), value = T),
                                grep("padj", colnames(data_dt), value = T), grep("Dir", colnames(data_dt), value = T)))]
+    gseaScatter_gg <- ggplot(data = data_dt, aes(x = !!sym(paste0("NES_", names(data_lsdt)[1])), y = !!sym(paste0("NES_", names(data_lsdt)[2])))) +
+      geom_point() + my_theme() + coord_equal() +
+      geom_smooth(data = data_dt, method = 'lm', formula = y~x) +
+      ggpubr::stat_cor(data = data_dt, show.legend = F) +
+      ggtitle(paste0("Compare ", names(data_lsdt)[1], " (x) and ", names(data_lsdt)[2], " (y)\n", currListName_v, " NES"))
     
-    gseaFullOut_lslsls[[currListName_v]] <- gsea_lsls
-    gseaCompareOut_lsls[[currListName_v]] <- list("data" = data_dt, "plot" = plot_gg)
+    ### Venn diagram
+    gseaUpVennList_lsv <- list(gsea_lsls[[1]]$data[NES > 0, pathway], gsea_lsls[[2]]$data[NES > 0, pathway]); names(gseaUpVennList_lsv) <- names(gsea_lsls)
+    gseaDnVennList_lsv <- list(gsea_lsls[[1]]$data[NES < 0, pathway], gsea_lsls[[2]]$data[NES < 0, pathway]); names(gseaDnVennList_lsv) <- names(gsea_lsls)
     
-    out_ls[['fullGSEA']] <- gseaFullOut_lslsls
-    out_ls[['compareGSEA']] <- gseaCompareOut_lsls
+    if (length(gseaUpVennList_lsv[[1]]) > 0 & length(gseaUpVennList_lsv[[2]]) > 0) {
+      gseaUp_venn <- invisible(venn.diagram(x = gseaUpVennList_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                            main = paste0("Shared Up-reg ", currListName_v, " Pathways\n", names(gsea_lsls)[[1]], " vs. ", names(gsea_lsls)[[2]])))
+    } else {
+      gseaUp_venn <- NULL
+    }
     
+    if (length(gseaDnVennList_lsv[[1]]) > 0 & length(gseaDnVennList_lsv[[2]]) > 0) {
+      gseaDn_venn <- invisible(venn.diagram(x = gseaDnVennList_lsv, filename = NULL, print.mode = c("raw", "percent"),
+                                            main = paste0("Shared Down-reg ", currListName_v, " Pathways\n", names(gsea_lsls)[[1]], " vs. ", names(gsea_lsls)[[2]])))
+    } else {
+      gseaDn_venn <- NULL
+    }
+    
+    ### Arrange
+    gseaVenn_gg <- ggpubr::ggarrange(plotlist = list(gseaUp_venn, gseaDn_venn), nol = 2)
+    
+    ### Output
     if (print_v) {
       print(plot_gg)
       print(DT::datatable(data_dt))
+      print(gseaScatter_gg)
+      print(gseaVenn_gg)
     } # fi print_v
     
     if (!is.null(outDir_v)) {
@@ -209,11 +237,28 @@ plotComparePhenotypesProteo <- function(data1_dt, data2_dt = NULL, names_v = NUL
           width = widths_v[currListName_v], height = max(sapply(gsea_lsls, function(x) nrow(x$data))))
       print(plot_gg)
       dev.off()
+      
+      pdf(file = file.path(outDir_v, paste0(currListName_v, "_compare_", paste0(names(data_lsdt), collapse = "-_-"), "_gseaScatter.pdf")))
+      print(gseaScatter_gg)
+      dev.off()
+      
+      pdf(file = file.path(outDir_v, paste0(currListName_v, "_compare_", paste0(names(data_lsdt), collapse = "-_-"), "_gseaVenn.pdf")))
+      print(gseaVenn_gg)
+      dev.off()
     } # fi !is.null(outDir_v)
+    
+    ### Add to full list
+    gseaFullOut_lslsls[[currListName_v]] <- gsea_lsls
+    gseaCompareOut_lsls[[currListName_v]] <- list("data" = data_dt, "waterfall" = plot_gg, "scatter" = gseaScatter_gg, "venn" = gseaVenn_gg)
     
   } # for i
   
+  out_ls[['fullGSEA']] <- gseaFullOut_lslsls
+  out_ls[['compareGSEA']] <- gseaCompareOut_lsls
+  
   return(out_ls)
+  
+  
   
 } # compareDataTypesProteo
 
